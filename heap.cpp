@@ -17,20 +17,20 @@ private:
         return 2 * index + 2;
     }
 
-    void maxHeapify(int index) {
+    void maxHeapify(int index,int heapSize) {
         int largest = index;
         int left = leftChild(index);
         int right = rightChild(index);
 
-        if (left < heap.size() && heap[left] > heap[largest]) {
+        if (left < heapSize && heap[left] > heap[largest]) {
             largest = left;
         }
-        if (right < heap.size() && heap[right] > heap[largest]) {
+        if (right < heapSize && heap[right] > heap[largest]) {
             largest = right;
         }
         if (largest != index) {
             std::swap(heap[index], heap[largest]);
-            maxHeapify(largest);
+            maxHeapify(largest,heapSize);
         }
     }
 
@@ -40,13 +40,12 @@ public:
     void buildMaxHeap() {
         int startIndex = (heap.size() / 2) - 1;
         for (int i = startIndex; i >= 0; --i) {
-            maxHeapify(i);
+            maxHeapify(i,heap.size());
         }
     }
 
     void insert(int key) {
         heap.push_back(key);
-        buildMaxHeap();
     }
 
     int extractMax() {
@@ -56,7 +55,7 @@ public:
         int root = heap[0];
         heap[0] = heap.back();
         heap.pop_back();
-        maxHeapify(0);
+        maxHeapify(0,heap.size());
         return root;
     }
 
@@ -74,8 +73,16 @@ public:
         int minValue = heap[minIndex];
         heap[minIndex] = heap.back();
         heap.pop_back();
-        maxHeapify(minIndex);
+        maxHeapify(minIndex,heap.size());
         return minValue;
+    }
+
+    void heapSort(){
+        buildMaxHeap();
+        for(int i=heap.size()-1;i>=1;i--){
+            ::swap(heap[0],heap[i]);
+            maxHeapify(0,i);
+        }
     }
 
     void printHeap() {
@@ -84,6 +91,7 @@ public:
         }
         cout << endl;
     }
+
 };
 
 int main() {
@@ -107,6 +115,10 @@ int main() {
     maxHeap.printHeap();
 
     cout << "extract max: " << maxHeap.extractMax() << endl;
+    maxHeap.printHeap();
+
+    maxHeap.heapSort();
+    cout<<"Sorted array: ";
     maxHeap.printHeap();
 
     return 0;
