@@ -1,6 +1,16 @@
 #include <bits/stdc++.h>
 #define ll long long
 using namespace std;
+
+template<class t>
+int sequentialSearch(const vector<t>list, t target) {
+    for (int i = 0; i < list.size(); i++) {
+        if (list[i] == target) {
+            return i;
+        }
+    }
+    return -1;
+}
 template<class t>
 int recursiveSequentialSearch(vector<t>list, t target,int index=0){
     if(index>=list.size())
@@ -22,8 +32,9 @@ int recursiveBinarySearch(vector<t>list,t target, int low,int high){
 
 }
 int main() {
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+    //ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     vector<int>list={1,2,3,4};
-    cout<<recursiveBinarySearch(list,2,0,3);
+    cout<<sequentialSearch(list,4)<<endl;
+    cout<<recursiveBinarySearch(list,2,0,3)<<endl;
 
 }
