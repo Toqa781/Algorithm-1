@@ -10,8 +10,20 @@ int recursiveSequentialSearch(vector<t>list, t target,int index=0){
     return recursiveSequentialSearch(list,target,index+1);
 
 }
+template<class t>
+int recursiveBinarySearch(vector<t>list,t target, int low,int high){
+    if(low>high)return -1;
+    int mid=low+(high-low)/2;
+    if(list[mid]==target)return mid;
+    if(target<list[mid])
+        return recursiveBinarySearch(list,target,low,mid-1);
+    else
+        return recursiveBinarySearch(list,target,mid+1,high);
+
+}
 int main() {
     ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     vector<int>list={1,2,3,4};
-    cout<<recursiveSequentialSearch(list,5);
+    cout<<recursiveBinarySearch(list,2,0,3);
+
 }
