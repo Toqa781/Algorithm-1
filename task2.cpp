@@ -35,6 +35,7 @@ int main() {
     //ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
     vector<int>list={1,2,3,4};
     cout<<sequentialSearch(list,4)<<endl;
+    cout<<recursiveSequentialSearch(list,3)<<endl;
     cout<<recursiveBinarySearch(list,2,0,3)<<endl;
 
 }
