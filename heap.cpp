@@ -107,7 +107,7 @@ public:
 
 class PriorityQueue : public Heap<pair<int, int>> {
 public:
-    // Insert element with priority
+    
     void insert(int priority, int data) {
         Heap<pair<int, int>>::insert({priority, data});
     }
@@ -132,7 +132,6 @@ public:
         pair<int, int> minValue = heap[minIndex];
         heap[minIndex] = heap.back();
         heap.pop_back();
-        // Rebuild max heap to maintain properties after removal
         for (int i = (minIndex - 1) / 2; i >= 0; --i) {
             maxHeapify(i, heap.size());
         }
