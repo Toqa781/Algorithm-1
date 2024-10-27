@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+
 class Heap {
 private:
     vector<int> heap;
@@ -17,20 +18,20 @@ private:
         return 2 * index + 2;
     }
 
-    void maxHeapify(int index) {
+    void maxHeapify(int index, int heapSize) {
         int largest = index;
         int left = leftChild(index);
         int right = rightChild(index);
 
-        if (left < heap.size() && heap[left] > heap[largest]) {
+        if (left < heapSize && heap[left] > heap[largest]) {
             largest = left;
         }
-        if (right < heap.size() && heap[right] > heap[largest]) {
+        if (right < heapSize && heap[right] > heap[largest]) {
             largest = right;
         }
         if (largest != index) {
-            std::swap(heap[index], heap[largest]);
-            maxHeapify(largest);
+            swap(heap[index], heap[largest]);
+            maxHeapify(largest, heapSize);
         }
     }
 
@@ -40,13 +41,13 @@ public:
     void buildMaxHeap() {
         int startIndex = (heap.size() / 2) - 1;
         for (int i = startIndex; i >= 0; --i) {
-            maxHeapify(i);
+            maxHeapify(i, heap.size());
         }
     }
 
     void insert(int key) {
         heap.push_back(key);
-        buildMaxHeap();
+        buildMaxHeap(); // Re-builds max-heap property after insertion
     }
 
     int extractMax() {
@@ -56,7 +57,7 @@ public:
         int root = heap[0];
         heap[0] = heap.back();
         heap.pop_back();
-        maxHeapify(0);
+        maxHeapify(0, heap.size());
         return root;
     }
 
@@ -74,8 +75,16 @@ public:
         int minValue = heap[minIndex];
         heap[minIndex] = heap.back();
         heap.pop_back();
-        maxHeapify(minIndex);
+        maxHeapify(minIndex, heap.size());
         return minValue;
+    }
+
+    void heapSort() {
+        buildMaxHeap();
+        for (int i = heap.size() - 1; i >= 1; i--) {
+            swap(heap[0], heap[i]);
+            maxHeapify(0, i);
+        }
     }
 
     void printHeap() {
@@ -84,29 +93,40 @@ public:
         }
         cout << endl;
     }
+
+    // Priority Queue function to demonstrate the priority queue operations
+    void priorityQueue() {
+        insert(16);
+        insert(14);
+        insert(10);
+        insert(8);
+        insert(7);
+        insert(9);
+        insert(3);
+        insert(2);
+        insert(4);
+        insert(1);
+
+        cout << "Priority Queue after inserts: ";
+        printHeap();
+
+        cout << "Extracted max: " << extractMax() << endl;
+        printHeap();
+
+        cout << "Extracted min: " << extractMin() << endl;
+        printHeap();
+
+        cout << "Extracted max again: " << extractMax() << endl;
+        printHeap();
+    }
 };
 
 int main() {
     Heap maxHeap;
-    maxHeap.insert(16);
-    maxHeap.insert(14);
-    maxHeap.insert(10);
-    maxHeap.insert(8);
-    maxHeap.insert(7);
-    maxHeap.insert(9);
-    maxHeap.insert(3);
-    maxHeap.insert(2);
-    maxHeap.insert(4);
-    maxHeap.insert(1);
+    maxHeap.priorityQueue(); // Calls the priorityQueue function to demonstrate operations
 
-    maxHeap.printHeap();
-
-    cout << "extract max: " << maxHeap.extractMax() << endl;
-    maxHeap.printHeap();
-    cout << "extract min: " << maxHeap.extractMin() << endl;
-    maxHeap.printHeap();
-
-    cout << "extract max: " << maxHeap.extractMax() << endl;
+    maxHeap.heapSort();
+    cout << "Sorted array: ";
     maxHeap.printHeap();
 
     return 0;
