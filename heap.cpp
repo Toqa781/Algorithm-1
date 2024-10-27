@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <utility> // For std::pair
 using namespace std;
 
+template<typename T>
 class Heap {
-private:
-    vector<int> heap;
+protected:
+    vector<T> heap;
 
     int parent(int index) {
         return (index - 1) / 2;
@@ -45,26 +47,34 @@ public:
         }
     }
 
-    void insert(int key) {
+    void insert(const T& key) {
         heap.push_back(key);
-        buildMaxHeap(); 
+        int index = heap.size() - 1;
+
+        while (index != 0 && heap[parent(index)] < heap[index]) {
+            swap(heap[index], heap[parent(index)]);
+            index = parent(index);
+        }
     }
 
-    int extractMax() {
+    T extractMax() {
         if (heap.empty()) {
             throw out_of_range("Heap is empty");
         }
-        int root = heap[0];
+
+        T root = heap[0];
         heap[0] = heap.back();
         heap.pop_back();
         maxHeapify(0, heap.size());
+
         return root;
     }
-
-    int extractMin() {
+    T extractMin() {
         if (heap.empty()) {
             throw out_of_range("Heap is empty");
         }
+
+
         int minIndex = 0;
         for (int i = 1; i < heap.size(); ++i) {
             if (heap[i] < heap[minIndex]) {
@@ -72,62 +82,133 @@ public:
             }
         }
 
-        int minValue = heap[minIndex];
+        T minValue = heap[minIndex];
         heap[minIndex] = heap.back();
         heap.pop_back();
-        maxHeapify(minIndex, heap.size());
+        maxHeapify(minIndex, heap.size()); 
         return minValue;
     }
-
     void heapSort() {
         buildMaxHeap();
-        for (int i = heap.size() - 1; i >= 1; i--) {
+        int heapSize = heap.size();
+        for (int i = heapSize - 1; i >= 1; --i) {
             swap(heap[0], heap[i]);
             maxHeapify(0, i);
         }
     }
 
-    void printHeap() {
-        for (int val : heap) {
+    void printHeap() const {
+        for (const auto& val : heap) {
             cout << val << " ";
         }
         cout << endl;
     }
+};
 
-    
-    void priorityQueue() {
-        insert(16);
-        insert(14);
-        insert(10);
-        insert(8);
-        insert(7);
-        insert(9);
-        insert(3);
-        insert(2);
-        insert(4);
-        insert(1);
+class PriorityQueue : public Heap<pair<int, int>> {
+public:
+    // Insert element with priority
+    void insert(int priority, int data) {
+        Heap<pair<int, int>>::insert({priority, data});
+    }
 
-        cout << "Priority Queue after inserts: ";
-        printHeap();
 
-        cout << "Extracted max: " << extractMax() << endl;
-        printHeap();
+    pair<int, int> extractMax() {
+        return Heap<pair<int, int>>::extractMax();
+    }
 
-        cout << "Extracted min: " << extractMin() << endl;
-        printHeap();
 
-        cout << "Extracted max again: " << extractMax() << endl;
-        printHeap();
+    pair<int, int> extractMin() {
+        if (heap.empty()) {
+            throw out_of_range("Heap is empty");
+        }
+        int minIndex = 0;
+        for (int i = 1; i < heap.size(); ++i) {
+            if (heap[i].first < heap[minIndex].first) {
+                minIndex = i;
+            }
+        }
+
+        pair<int, int> minValue = heap[minIndex];
+        heap[minIndex] = heap.back();
+        heap.pop_back();
+        // Rebuild max heap to maintain properties after removal
+        for (int i = (minIndex - 1) / 2; i >= 0; --i) {
+            maxHeapify(i, heap.size());
+        }
+        for (int i = minIndex; i < heap.size(); ) {
+            maxHeapify(i, heap.size());
+            i = leftChild(i);
+        }
+
+        return minValue;
+    }
+
+
+    void printHeap() const {
+        for (const auto& val : heap) {
+            cout << "(" << val.first << ", " << val.second << ") ";
+        }
+        cout << endl;
     }
 };
 
 int main() {
-    Heap maxHeap;
-    maxHeap.priorityQueue(); 
+    Heap<int> maxHeap;
+    maxHeap.insert(16);
+    maxHeap.insert(14);
+    maxHeap.insert(10);
+    maxHeap.insert(8);
+    maxHeap.insert(7);
+    maxHeap.insert(9);
+    maxHeap.insert(3);
+    maxHeap.insert(2);
+    maxHeap.insert(4);
+    maxHeap.insert(1);
 
+    maxHeap.printHeap();
+
+    cout << "extract max: " << maxHeap.extractMax() << endl;
+    maxHeap.printHeap();
+
+    cout << "extract max: " << maxHeap.extractMax() << endl;
+    maxHeap.printHeap();
+    cout << "Extract min: " << maxHeap.extractMin() << endl;
+    maxHeap.printHeap();
     maxHeap.heapSort();
     cout << "Sorted array: ";
     maxHeap.printHeap();
+
+    PriorityQueue pq;
+
+
+    pq.insert(10, 16);
+    pq.insert(9, 14);
+    pq.insert(8, 10);
+    pq.insert(7, 8);
+    pq.insert(6, 7);
+    pq.insert(5, 9);
+    pq.insert(4, 3);
+    pq.insert(3, 2);
+    pq.insert(2, 4);
+    pq.insert(1, 1);
+
+    cout << "Priority Queue (Heap): ";
+    pq.printHeap();
+
+
+    cout << "Extract max (highest priority): ";
+    auto maxElement = pq.extractMax();
+    cout << "(" << maxElement.first << ", " << maxElement.second << ")" << endl;
+    pq.printHeap();
+    cout << "Extract min (lowest priority): ";
+    auto minElement = pq.extractMin();
+    cout << "(" << minElement.first << ", " << minElement.second << ")" << endl;
+    pq.printHeap();
+
+    cout << "Sorted by priority (Heap Sort): ";
+    pq.heapSort();
+    pq.printHeap();
 
     return 0;
 }
