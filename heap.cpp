@@ -47,7 +47,7 @@ public:
 
     void insert(int key) {
         heap.push_back(key);
-        buildMaxHeap(); // Re-builds max-heap property after insertion
+        buildMaxHeap(); 
     }
 
     int extractMax() {
@@ -94,7 +94,7 @@ public:
         cout << endl;
     }
 
-    // Priority Queue function to demonstrate the priority queue operations
+    
     void priorityQueue() {
         insert(16);
         insert(14);
@@ -123,7 +123,7 @@ public:
 
 int main() {
     Heap maxHeap;
-    maxHeap.priorityQueue(); // Calls the priorityQueue function to demonstrate operations
+    maxHeap.priorityQueue(); 
 
     maxHeap.heapSort();
     cout << "Sorted array: ";
