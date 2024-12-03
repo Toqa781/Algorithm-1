@@ -52,5 +52,5 @@ Implementation of sequential and binary search algorithms in both iterative and 
 ### **1. Clone the Repository**
 Clone the repository to your local system:
 ```bash
-git clone https://github.com/your-username/Algorithm-1.git
+git clone https://github.com/Toqa781/Algorithm-1.git
 cd Algorithm-1
