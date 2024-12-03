@@ -1,4 +1,4 @@
-# **Algorithm-1
+# **Algorithm-1**
 
 ## **Overview**
 This repository contains **C++ implementations** of various fundamental algorithms and data structures. These implementaion covers Fibonacci series, search algorithms, and heap-based operations.
